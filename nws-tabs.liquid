@@ -1,0 +1,146 @@
+{{ 'nws-tabs.css' | asset_url | stylesheet_tag }}
+{% style %}
+  .nws-custom-tabs {
+    {% if section.settings.slct-bg == 'gradient' %}background:{{ section.settings.section_background_gradient }};{% endif %}
+    {% if section.settings.slct-bg == 'solid' %}background:{{ section.settings.section-background }};{% endif %}
+  }
+{% endstyle %}
+<!-- nws-custom-tabs.liquid -->
+<div class="nws-custom-tabs nws-same-padding {{ section.settings.section-extra-class }}">
+  <div class="nws-custom-container">
+    <!-- section header start -->
+    <div class="nws-section-header">
+      {% if section.settings['section-title'] != blank %}
+        <h2 class="section-title">{{ section.settings['section-title'] }}</h2>
+      {% endif %}
+      {% if section.settings.section_desc != blank %}
+        <div class="section-desc">{{ section.settings.section_desc }}</div>
+      {% endif %}
+    </div>
+    <!-- section header end -->
+    <div class="nws-tabs-container">
+      <div class="nws-tab-block">
+        <div class="nws-tab-titles-wrapper">
+          {% for block in section.blocks %}
+            {% if block.settings.tab_title != blank %}
+              <h3 class="nws-tab-title">{{ block.settings.tab_title }}</h3>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="nws-tabs-body">
+          {% for block in section.blocks %}
+            {% if block.settings.tab_desc != blank %}
+              <div class="nws-tab-content">{{ block.settings.tab_desc }}</div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% if section.settings.btn_name != blank %}
+        <a href="{{ section.settings.btn_link }}" class="nws-faq-btn">{{ section.settings.btn_name }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Nws Custom Tab",
+  "disabled_on": {
+  "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "options": [
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "solid", "label": "Background Color"}
+        ],
+      "id": "slct-bg",
+      "default": "solid",
+      "label": "Section Background Type"
+    },
+    {
+      "type": "color_background",
+      "label": "Section Background Gradient",
+      "id": "section_background_gradient"
+    },
+    {
+      "type": "color",
+      "id": "section-background",
+      "default": "#f9f4ed",
+      "info": "Background",
+      "label": "Section Background"
+    },
+     {
+      "type": "text",
+      "id": "section-extra-class",
+      "info": "Add section class (without.). Use spaces to add multiple classes",
+      "label": "Section Class"
+    },
+    {
+      "type": "text",
+      "id": "section-title",
+      "default": "Lorem Ipsum",
+      "label": "Heading (Optional)"
+    },
+    {
+      "type": "richtext",
+      "id": "section_desc",
+      "label": "Description (Optional)"
+    },
+    {
+      "type": "text",
+      "id": "btn_name",
+      "label": "Button Label"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Paste Url"
+    }
+  ],
+"blocks":[
+  {
+    "type": "tab",
+    "name": "Tab",
+    "settings":[
+      {
+        "type": "text",
+        "id": "tab_title",
+        "label": "Tab Title"
+      },
+      {
+        "type": "richtext",
+        "id": "tab_desc",
+        "label": "Tab Description"
+      }
+    ]
+  }
+],
+  "presets": [
+    {
+      "name": "Nws Custom Tab",
+      "category": "Nws Custom Section"
+    }
+  ]
+}
+{% endschema %}
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script>
+  $(document).ready(function () {
+     // Show the first tab content by default
+     $('.nws-tab-content:first').addClass('nws-active-tab-body');
+     $('.nws-tab-title:first').addClass('nws-active-tab');
+
+     // Handle click on tab titles
+     $('.nws-tab-title').on('click', function () {
+       // Remove 'active' class from all tab contents
+       $('.nws-tab-content').removeClass('nws-active-tab-body');
+       $('.nws-tab-title').removeClass('nws-active-tab');
+
+       // Add 'active' class to the clicked tab content
+       var index = $(this).index();
+       $('.nws-tab-content').eq(index).addClass('nws-active-tab-body');
+       $('.nws-tab-title').eq(index).addClass('nws-active-tab');
+     });
+   });
+</script>
